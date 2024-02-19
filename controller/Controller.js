@@ -20,3 +20,20 @@ exports.Chatting = async (req, res, next) => {
     data: publishedMessage,
   });
 };
+
+exports.InitialInputValues = async (req, res, next) => {
+  const data = await pubRedisClient.get("inputValues");
+
+  if (!data) {
+    return res.status(200).json({
+      success: true,
+      message: "No Initial Input Values",
+      data: null,
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Initial Input Values",
+    data: JSON.parse(data),
+  });
+};

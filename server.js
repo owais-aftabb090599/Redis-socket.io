@@ -24,6 +24,11 @@ io.on("connection", async (socket) => {
     console.log("New Message", message);
     io.emit("newMessage", message);
   });
+
+  socket.on("storeInputValues", async (data) => {
+    const inputValues = await pubRedisClient.set("inputValues", JSON.stringify(data));
+  });
+
   socket.on("disconnect", (reason) => {
     console.log("### Socket IO client disconnected");
   });

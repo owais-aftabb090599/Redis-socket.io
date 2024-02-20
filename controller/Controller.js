@@ -1,4 +1,5 @@
 const { pubRedisClient } = require("../utils/RedisClinet");
+const jwt = require("jsonwebtoken");
 
 exports.Chatting = async (req, res, next) => {
   const { name, msg } = req.body;
@@ -22,7 +23,9 @@ exports.Chatting = async (req, res, next) => {
 };
 
 exports.InitialInputValues = async (req, res, next) => {
-  const data = await pubRedisClient.get("inputValues");
+  const token = req.headers.authorization.split("Bearer ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const data = await pubRedisClient.get(`${decoded._id}InputValues`);
 
   if (!data) {
     return res.status(200).json({
